@@ -35,17 +35,17 @@ function openLightbox(event) {
 
   instance.show();
 
-  function closeLightbox() {
-    instance.close();
-    window.removeEventListener("keydown", onEscPress);
-  }
+  // function closeLightbox() {
+  //   instance.close();
+  //   window.removeEventListener("keydown", onEscPress);
+  // }
 
-  function onEscPress(event) {
-    if (event.code === "Escape") {
-      closeLightbox();
-    }
-  }
-  window.addEventListener("keydown", onEscPress);
+  // function onEscPress(event) {
+  //   if (event.code === "Escape") {
+  //     closeLightbox();
+  //   }
+  // }
+  // window.addEventListener("keydown", onEscPress);
 }
 galleryItemsList.insertAdjacentHTML("beforeend", itemsMarkup);
 galleryItemsList.addEventListener("click", openLightbox);
