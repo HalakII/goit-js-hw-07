@@ -3,6 +3,8 @@ import { galleryItems } from "./gallery-items.js";
 
 const galleryItemsList = document.querySelector(".gallery");
 const itemsMarkup = createImageGallery(galleryItems);
+galleryItemsList.insertAdjacentHTML("beforeend", itemsMarkup);
+galleryItemsList.addEventListener("click", openImage);
 
 function createImageGallery(images) {
   return images
@@ -20,32 +22,47 @@ function createImageGallery(images) {
     })
     .join("");
 }
-function openLightbox(event) {
+function openImage(event) {
   event.preventDefault();
   const isClickImgField = event.target.classList.contains("gallery__image");
   if (!isClickImgField) {
     return;
   }
+  const currentImg = event.target.dataset.source;
 
-  const currentImgActive = event.target.dataset.source;
+  const instance = basicLightbox.create(
+    `
+  <img src="${currentImg}" width="1280">
+`,
+    {
+      onShow: (instance) => {
+        window.addEventListener("keydown", onEscPress);
+      },
+      onClose: (instance) => {
+        window.removeEventListener("keydown", onEscPress);
+      },
+    }
+  );
 
-  const instance = basicLightbox.create(`
-    <img src="${currentImgActive}" width="1280">
-`);
+  function onEscPress(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
 
   instance.show();
-
-  // function closeLightbox() {
-  //   instance.close();
-  //   window.removeEventListener("keydown", onEscPress);
-  // }
-
-  // function onEscPress(event) {
-  //   if (event.code === "Escape") {
-  //     closeLightbox();
-  //   }
-  // }
-  // window.addEventListener("keydown", onEscPress);
 }
-galleryItemsList.insertAdjacentHTML("beforeend", itemsMarkup);
-galleryItemsList.addEventListener("click", openLightbox);
+
+// Миколо, це мій перший код, можете мені сказати чи я правильно зняла слухача, він працює, але мені підказали що треба робити як вище, бо так написано в документації.
+
+// function closeLightbox() {
+//   instance.close();
+//   window.removeEventListener("keydown", onEscPress);
+// }
+
+// function onEscPress(event) {
+//   if (event.code === "Escape") {
+//     closeLightbox();
+//   }
+// }
+// window.addEventListener("keydown", onEscPress);
