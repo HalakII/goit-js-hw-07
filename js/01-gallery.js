@@ -1,13 +1,10 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-console.log(galleryItems);
 const galleryItemsList = document.querySelector(".gallery");
-const itemsMarkup = createImagGallery(galleryItems);
-galleryItemsList.insertAdjacentHTML("beforeend", itemsMarkup);
-galleryItemsList.addEventListener("click", clickOnImageList);
+const itemsMarkup = createImageGallery(galleryItems);
 
-function createImagGallery(images) {
+function createImageGallery(images) {
   return images
     .map(({ preview, original, description }) => {
       return `<li class="gallery__item">
@@ -23,13 +20,12 @@ function createImagGallery(images) {
     })
     .join("");
 }
-function clickOnImageList(event) {
+function openLightbox(event) {
   event.preventDefault();
   const isClickImgField = event.target.classList.contains("gallery__image");
   if (!isClickImgField) {
     return;
   }
-  console.log(event.target);
 
   const currentImgActive = event.target.dataset.source;
 
@@ -38,4 +34,18 @@ function clickOnImageList(event) {
 `);
 
   instance.show();
+
+  function closeLightbox() {
+    instance.close();
+    window.removeEventListener("keydown", onEscPress);
+  }
+
+  function onEscPress(event) {
+    if (event.code === "Escape") {
+      closeLightbox();
+    }
+  }
+  window.addEventListener("keydown", onEscPress);
 }
+galleryItemsList.insertAdjacentHTML("beforeend", itemsMarkup);
+galleryItemsList.addEventListener("click", openLightbox);
